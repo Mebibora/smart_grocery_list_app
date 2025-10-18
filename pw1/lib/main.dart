@@ -15,12 +15,13 @@ class _MyAppState extends State<MyApp> {
   final ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.lightGreen,
     brightness: Brightness.light,
+    scaffoldBackgroundColor: const Color.fromARGB(255, 78, 168, 186),
   );
 
   final ThemeData darkTheme = ThemeData(
     primarySwatch: Colors.green,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: const Color.fromARGB(255, 40, 48, 104),
   );
 
   void _toggleTheme() {
@@ -49,19 +50,44 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dark Mode Toggle')),
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: 30,
-            right: 30,
-            child: ElevatedButton(
-              onPressed: toggleTheme,
-              child: Text('Toggle Theme'),
+      appBar: AppBar(title: Text('Smart Grocery App')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            Spacer(),
+
+            ElevatedButton(
+              onPressed: toggleTheme, 
+              child: Text('View List')
             ),
-          ),
-        ] 
-      ),
+
+            SizedBox(
+              height: 10,
+            ),
+            
+            ElevatedButton(
+              onPressed: toggleTheme, 
+              child: Text('Weekly List Generator')
+            ),
+
+            Spacer(),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0), 
+                  child: ElevatedButton(
+                    onPressed: toggleTheme,                    
+                    child: Text('Toggle Theme'),
+                  ),
+                ),
+              ],
+            ),
+          ]
+        ),
+      )
     );
   }
 }
