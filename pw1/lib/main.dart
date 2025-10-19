@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-
+import 'home_screen.dart'; // This is Screen One
+import 'user_list_screen.dart'; // This is Screen Two
+import 'weekly_list_generator_screen.dart'; // This is Screen Three
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.light;
 
+  // These are the setting for the light theme and the dark theme
   final ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.lightGreen,
     brightness: Brightness.light,
@@ -37,57 +40,14 @@ class _MyAppState extends State<MyApp> {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: _themeMode,
-      home: HomeScreen(toggleTheme: _toggleTheme),
-    );
-  }
-}
 
-class HomeScreen extends StatelessWidget {
-  final VoidCallback toggleTheme;
-
-  HomeScreen({required this.toggleTheme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Smart Grocery App')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:[
-            Spacer(),
-
-            ElevatedButton(
-              onPressed: toggleTheme, 
-              child: Text('View List')
-            ),
-
-            SizedBox(
-              height: 10,
-            ),
-            
-            ElevatedButton(
-              onPressed: toggleTheme, 
-              child: Text('Weekly List Generator')
-            ),
-
-            Spacer(),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0), 
-                  child: ElevatedButton(
-                    onPressed: toggleTheme,                    
-                    child: Text('Toggle Theme'),
-                  ),
-                ),
-              ],
-            ),
-          ]
-        ),
-      )
+      // This is the configuration for navigation between different screens
+      initialRoute: '/',
+      routes: {
+        '/': (context) => ScreenOne(onToggleTheme: _toggleTheme), // Navigation to the Home Screen
+        '/second': (context) => const ScreenTwo(), // Navigation to the User List Screen
+        '/third': (context) => const ScreenThree()
+      },
     );
   }
 }
