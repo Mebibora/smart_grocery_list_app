@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => ScreenOne(onToggleTheme: _toggleTheme), // Navigation to the Home Screen
         '/second': (context) => const ScreenTwo(), // Navigation to the User List Screen
-        '/third': (context) => const ScreenThree()
+        '/third': (context) => const ScreenThree() // Naviagtion to the Weekly list Generator Screen
       },
     );
   }

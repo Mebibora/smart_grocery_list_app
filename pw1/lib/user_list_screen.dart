@@ -9,9 +9,10 @@ class ScreenTwo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Your List')),
       body: Center(
+        // Button for returning back to the home screen
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pop(context); // Go back to Screen One
+            Navigator.pop(context); 
           },
           child: const Text('Back to Home Screen'),
         ),

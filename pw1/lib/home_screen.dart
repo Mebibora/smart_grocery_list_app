@@ -1,4 +1,4 @@
-// lib/screen_one.dart
+// Screen One
 import 'package:flutter/material.dart';
 
 class ScreenOne extends StatelessWidget {
@@ -14,7 +14,9 @@ class ScreenOne extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             Spacer(),
+            // Button for navgating to the user list screen
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/second');
@@ -22,6 +24,7 @@ class ScreenOne extends StatelessWidget {
               child: const Text('View List'),
             ),            
             const SizedBox(height: 20),
+            // Button for navigating to the weekly list generator screen
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/third');
@@ -33,7 +36,8 @@ class ScreenOne extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0), 
+                  padding: const EdgeInsets.all(16.0),
+                  // Button for toggling the theme 
                   child: ElevatedButton(
                     onPressed: onToggleTheme,                    
                     child: Text('Toggle Theme'),
