@@ -1,53 +1,56 @@
-// Screen One
+//screen one
 import 'package:flutter/material.dart';
+import 'screen_one.dart';
+import 'user_list_screen.dart';
+import 'weekly_list_generator_screen.dart';
 
-class ScreenOne extends StatelessWidget {
-  final VoidCallback onToggleTheme;
+void main() {
+  runApp(const SmartGroceryApp());
+}
 
-  const ScreenOne({super.key, required this.onToggleTheme});
+class SmartGroceryApp extends StatefulWidget {
+  const SmartGroceryApp({super.key});
+
+  @override
+  State<SmartGroceryApp> createState() => _SmartGroceryAppState();
+}
+
+class _SmartGroceryAppState extends State<SmartGroceryApp> {
+  bool isDarkTheme = false;
+
+  void toggleTheme() {
+    setState(() {
+      isDarkTheme = !isDarkTheme;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Smart Grocery App')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Smart Grocery App',
+      theme: isDarkTheme
+          ? ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.dark,
+              ),
+            )
+          : ThemeData.light().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.light,
+              ),
+            ),
 
-            Spacer(),
-            // Button for navgating to the user list screen
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/second');
-              },
-              child: const Text('View List'),
-            ),            
-            const SizedBox(height: 20),
-            // Button for navigating to the weekly list generator screen
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/third');
-              },
-              child: const Text('Weekly List Generator'),
-            ),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  // Button for toggling the theme 
-                  child: ElevatedButton(
-                    onPressed: onToggleTheme,                    
-                    child: Text('Toggle Theme'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      // ✅ Start on ScreenOne
+      home: ScreenOne(onToggleTheme: toggleTheme),
+
+      // ✅ Define your named routes
+      routes: {
+        '/second': (context) => const UserListScreen(),
+        '/third': (context) => const WeeklyListGeneratorScreen(),
+      },
     );
   }
 }

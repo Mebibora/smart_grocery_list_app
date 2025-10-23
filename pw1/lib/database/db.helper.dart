@@ -183,4 +183,3 @@ for (var in in sample){
     final db = await database;
     await db.delete('groceries');
   }
-}
