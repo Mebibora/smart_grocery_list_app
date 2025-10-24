@@ -17,16 +17,21 @@ class _EditItemScreenState extends State<EditItemScreen> {
   late TextEditingController priceController;
   late TextEditingController descriptionController;
   bool purchased = false;
+  String? _selectedPriority;
 
   @override
   void initState() {
     super.initState();
     nameController = TextEditingController(text: widget.item.name);
     categoryController = TextEditingController(text: widget.item.category);
-    quantityController = TextEditingController(text: widget.item.quantity.toString());
-    priceController = TextEditingController(text: widget.item.price.toString());
-    descriptionController = TextEditingController(text: widget.item.description);
+    quantityController =
+        TextEditingController(text: widget.item.quantity.toString());
+    priceController =
+        TextEditingController(text: widget.item.price.toString());
+    descriptionController =
+        TextEditingController(text: widget.item.description);
     purchased = widget.item.purchased;
+    _selectedPriority = widget.item.priority;
   }
 
   @override
@@ -49,6 +54,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       description: descriptionController.text,
       image: widget.item.image,
       purchased: purchased,
+      priority: _selectedPriority ?? "I don't need",
     );
 
     await DBHelper.instance.updateItem(updatedItem);
@@ -67,25 +73,48 @@ class _EditItemScreenState extends State<EditItemScreen> {
               controller: nameController,
               decoration: const InputDecoration(labelText: 'Name'),
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: categoryController,
               decoration: const InputDecoration(labelText: 'Category'),
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: quantityController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Quantity'),
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: priceController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Price (\$)'),
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: descriptionController,
               decoration: const InputDecoration(labelText: 'Description'),
               maxLines: 3,
             ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              value: _selectedPriority,
+              decoration: const InputDecoration(labelText: 'Priority Level'),
+              items: const [
+                DropdownMenuItem(
+                    value: "I don't need", child: Text("I don't need")),
+                DropdownMenuItem(
+                    value: "I kinda need", child: Text("I kinda need")),
+                DropdownMenuItem(
+                    value: "I need now", child: Text("I need now")),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedPriority = value;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
             SwitchListTile(
               title: const Text('Purchased'),
               value: purchased,

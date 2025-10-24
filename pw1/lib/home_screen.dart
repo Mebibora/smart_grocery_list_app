@@ -43,10 +43,10 @@ class _SmartGroceryAppState extends State<SmartGroceryApp> {
               ),
             ),
 
-      // ✅ Start on ScreenOne
+      //Start on ScreenOne
       home: ScreenOne(onToggleTheme: toggleTheme),
 
-      // ✅ Define your named routes
+    // Define your named routes
       routes: {
         '/second': (context) => const UserListScreen(),
         '/third': (context) => const WeeklyListGeneratorScreen(),

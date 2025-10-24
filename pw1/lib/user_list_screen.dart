@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import '../models/grocery_item.dart';
-import 'edit_item_screen.dart'; // <-- make sure this file exists
+import 'edit_item_screen.dart';
 
 class ScreenTwo extends StatefulWidget {
   const ScreenTwo({super.key});
@@ -12,8 +12,7 @@ class ScreenTwo extends StatefulWidget {
 
 class _ScreenTwoState extends State<ScreenTwo> {
   List<GroceryItem> groceryItems = [];
-
-  String _searchQuery = ''; // ✅ holds the text for the search feature
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -29,9 +28,21 @@ class _ScreenTwoState extends State<ScreenTwo> {
     });
   }
 
+  // 🎨 Helper: choose color based on priority
+  Color _getPriorityColor(String priority) {
+    switch (priority) {
+      case "I need now":
+        return Colors.redAccent;
+      case "I kinda need":
+        return Colors.orangeAccent;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Filter the grocery items based on search query
+    // Filter items according to search
     final filteredItems = groceryItems
         .where((item) => item.name.toLowerCase().contains(_searchQuery))
         .toList();
@@ -57,7 +68,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
             ),
           ),
 
-          // 🧾 Filtered Item List
+          // 🧾 List of Items
           Expanded(
             child: filteredItems.isEmpty
                 ? const Center(child: Text('No items found.'))
@@ -66,7 +77,9 @@ class _ScreenTwoState extends State<ScreenTwo> {
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
                       return Card(
-                        color: item.approved ? Colors.lightGreen[100] : null,
+                        color: item.approved
+                            ? _getPriorityColor(item.priority).withOpacity(0.15)
+                            : null,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 6),
                         child: ListTile(
@@ -82,13 +95,16 @@ class _ScreenTwoState extends State<ScreenTwo> {
                                 const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                              '${item.category} • \$${item.price.toStringAsFixed(2)}'),
-                          
-                          // ✅ Approval Toggle + Purchase Icon
+                            '${item.category} • ${item.priority} • \$${item.price.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: _getPriorityColor(item.priority),
+                            ),
+                          ),
+
+                          // ✅ Approval switch + purchased icon
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Approval toggle switch
                               Switch(
                                 value: item.approved,
                                 onChanged: (value) async {
@@ -108,7 +124,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ],
                           ),
 
-                          // Tap to edit item
+                          // ✏️ Tap to edit item
                           onTap: () async {
                             final updated = await Navigator.push(
                               context,
@@ -125,9 +141,11 @@ class _ScreenTwoState extends State<ScreenTwo> {
           ),
         ],
       ),
+
+      // back to the home screen 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context); // Back to home screen
+          Navigator.pop(context);
         },
         child: const Icon(Icons.home),
       ),
