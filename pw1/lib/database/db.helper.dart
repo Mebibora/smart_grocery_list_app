@@ -32,7 +32,8 @@ class DBHelper {
         description TEXT,
         quantity INTEGER,
         purchased BOOL,
-        image TEXT
+        image TEXT,
+        approved TEXT
       )
     ''');
   }

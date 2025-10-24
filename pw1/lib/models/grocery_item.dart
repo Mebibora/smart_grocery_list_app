@@ -17,6 +17,7 @@ class GroceryItem {
     required this.description,
     required this.image,
     this.purchased = false,
+    this.approved = false,
   });
 
   // Convert to map for saving to database
@@ -28,7 +29,8 @@ class GroceryItem {
         'price': price,
         'description': description,
         'image': image,
-        'purchased': purchased ? 1 : 0, // SQLite stores bools as 0/1
+        'purchased': purchased ? 1 : 0, // SQLite stores bools as 0/1\
+        'approved' : approved ? 1 : 0,
       };
 
   // Convert map from database to GroceryItem object
@@ -41,5 +43,6 @@ class GroceryItem {
         description: map['description'],
         image: map['image'],
         purchased: map['purchased'] == 1,
+        approved: approved['approved'] == 1,
       );
 }
