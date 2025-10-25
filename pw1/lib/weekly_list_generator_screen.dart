@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import '../models/grocery_item.dart';
+import 'globals.dart';
 
 class WeeklyListGeneratorScreen extends StatefulWidget {
   const WeeklyListGeneratorScreen({super.key});
@@ -34,6 +35,32 @@ class _WeeklyListGeneratorScreenState
       weeklyList = selected;
     });
   }
+  
+  // Update the user's grocery list with the list from the weekly generator
+  acceptWeeklyList(){
+    groceryItems = List.from(weeklyList);
+  }
+
+  // Function to show AlertDialog
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Successfully Added'),
+          content: Text('Your list has been updated!'),
+          actions: [
+            ElevatedButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // closes the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +69,22 @@ class _WeeklyListGeneratorScreenState
       body: Column(
         children: [
           const SizedBox(height: 20),
-
+        
           // Button to generate list
           ElevatedButton(
-            onPressed: _generateWeeklyList,
+            onPressed: _generateWeeklyList,                       
             child: const Text('Generate Weekly List'),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Button to accept list and show alert
+          ElevatedButton(
+            onPressed: () {
+            acceptWeeklyList();
+            _showAlertDialog(context);
+            },
+            child: const Text('Accept'),
           ),
 
           const SizedBox(height: 20),
@@ -75,7 +113,7 @@ class _WeeklyListGeneratorScreenState
                       );
                     },
                   ),
-          ),
+          ),          
         ],
       ),
       floatingActionButton: FloatingActionButton(

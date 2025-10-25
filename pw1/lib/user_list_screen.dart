@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import '../models/grocery_item.dart';
 import 'edit_item_screen.dart';
+import 'globals.dart';
 
 class UserListScreen extends StatefulWidget {
+  
   const UserListScreen({super.key});
-
+  
+  
   @override
   State<UserListScreen> createState() => _UserListScreenState();
 }
 
-class _UserListScreenState extends State<UserListScreen> {
+
+
+
+class _UserListScreenState extends State<UserListScreen> with ChangeNotifier{
   List<GroceryItem> groceryItems = [];
   String _searchQuery = '';
 
@@ -40,9 +46,13 @@ class _UserListScreenState extends State<UserListScreen> {
     }
   }
 
+  void updateList(){
+    groceryItems = List.from(weeklyList);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 🔍 Filter items according to search
+    // Filter items according to search
     final filteredItems = groceryItems
         .where((item) => item.name.toLowerCase().contains(_searchQuery))
         .toList();
@@ -51,7 +61,7 @@ class _UserListScreenState extends State<UserListScreen> {
       appBar: AppBar(title: const Text('Your Grocery List')),
       body: Column(
         children: [
-          // 🔎 Search Bar
+          // 🔍 Search Bar
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -68,7 +78,7 @@ class _UserListScreenState extends State<UserListScreen> {
             ),
           ),
 
-          // 🧾 Filtered List of Items
+          // 🧾 List of Items
           Expanded(
             child: filteredItems.isEmpty
                 ? const Center(child: Text('No items found.'))
@@ -91,9 +101,8 @@ class _UserListScreenState extends State<UserListScreen> {
                           ),
                           title: Text(
                             item.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
                             '${item.category} • ${item.priority} • \$${item.price.toStringAsFixed(2)}',
@@ -102,7 +111,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             ),
                           ),
 
-                          // ✅ Approval Switch + Purchased Icon
+                          // ✅ Approval switch + purchased icon
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -125,7 +134,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             ],
                           ),
 
-                          // ✏️ Tap to Edit Item
+                          // ✏️ Tap to edit item
                           onTap: () async {
                             final updated = await Navigator.push(
                               context,
@@ -143,7 +152,7 @@ class _UserListScreenState extends State<UserListScreen> {
         ],
       ),
 
-      // ⬅️ Back to Home Screen
+      // back to the home screen 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pop(context);
