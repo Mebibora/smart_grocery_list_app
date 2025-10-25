@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/grocery_item.dart';
-import '../db/db_helper.dart';
+import '../database/db.helper.dart';
 
 class EditItemScreen extends StatefulWidget {
   final GroceryItem item;
@@ -44,6 +44,46 @@ class _EditItemScreenState extends State<EditItemScreen> {
     super.dispose();
   }
 
+  //table to return a price estimation depending on the category of an item
+  void estimatePrice(category){ 
+    setState(() {
+      switch(category){
+        case "Fruits":
+          priceController.text = "0.50";  
+          break;
+        case "Dairy":
+          priceController.text = "1.00"; 
+          break;
+        case "Bakery":
+          priceController.text = "3.99"; 
+          break;
+        case "Poultry":
+          priceController.text = "3.99"; 
+          break;
+        case "Meat":
+          priceController.text = "12.49"; 
+          break;
+        case "Grain":
+          priceController.text = "3.99"; 
+          break;
+        case "Beverages":
+          priceController.text = "2.99"; 
+          break;
+        case "Vegetable":
+          priceController.text = "0.79"; 
+          break;
+        case "Pantry":
+          priceController.text = "2.00"; 
+          break;
+        case "Cleaning_Supplies":
+          priceController.text = "15.59"; 
+          break;
+        default:
+          priceController.text = "0";
+      }
+    });  
+  }
+
   Future<void> _saveChanges() async {
     final updatedItem = GroceryItem(
       id: widget.item.id,
@@ -83,6 +123,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
               controller: quantityController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Quantity'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                estimatePrice(categoryController.text);},
+              child: Text("Estimate Price")
             ),
             const SizedBox(height: 10),
             TextField(

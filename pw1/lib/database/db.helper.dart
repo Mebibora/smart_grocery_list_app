@@ -21,7 +21,7 @@ class DBHelper {
       onCreate: _createTable,
     );
   }
-
+  
   Future<void> _createTable(Database db, int version) async {
     await db.execute('''
       CREATE TABLE groceries (
@@ -36,10 +36,10 @@ class DBHelper {
         approved TEXT,
         priority TEXT
       )
-    ''');
+    ''');  
   }
 
-  await _initialdata(db)
+  await _initialdata(db);
 }
 
 Future<void> _initialdata(Database db) async{
@@ -70,7 +70,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Whole wheat sandwich bread loaf.',
         'image': 'assets/images/bread.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Bread',
         'category': 'Bakery',
@@ -79,7 +79,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Whole oat bread, good for deli sandwhiches, and pb & js.',
         'image': 'assets/images/bread.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Eggs',
         'category': 'Poultry',
@@ -88,7 +88,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'One dozen large free-range eggs, organic.',
         'image': 'assets/images/eggs.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Chicken Breast',
         'category': 'Meat',
@@ -97,7 +97,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Boneless skinless chicken breasts (1 lb).',
         'image': 'assets/images/chicken.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Rice',
         'category': 'Grain',
@@ -106,7 +106,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Long grain white rice, 5 lb bag.',
         'image': 'assets/images/rice.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Apple Cider',
         'category': 'Beverages',
@@ -115,7 +115,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Freshly squeezed apple cider, gallon.',
         'image': 'assets/images/applecider.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Brocolli Crowns',
         'category': 'Vegetable',
@@ -124,7 +124,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Great green, high in sulfur, and great with blue cheese.',
         'image': 'assets/images/brocolli.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Alfredo Sauce',
         'category': 'Pantry',
@@ -133,7 +133,7 @@ Future<void> _initialdata(Database db) async{
         'description': 'Classic Italian-style Alfredo, 24 oz jar.',
         'image': 'assets/images/sauce.png',
         'purchased': 0,
-        }
+        },
         {
         'name': 'Clorox Bleach',
         'category': 'Cleaning_Supplies',
@@ -144,7 +144,7 @@ Future<void> _initialdata(Database db) async{
         'purchased': 0,
         }
 
-    ]
+    ];
 }
 
 for (var in in sample){
@@ -185,3 +185,4 @@ for (var in in sample){
     final db = await database;
     await db.delete('groceries');
   }
+}
