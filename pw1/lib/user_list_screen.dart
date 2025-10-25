@@ -20,7 +20,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
     _loadItems();
   }
 
-  // ✅ Fetch items from DB
+  //  Fetch items from DB
   Future<void> _loadItems() async {
     final items = await DBHelper.instance.getItems();
     setState(() {
@@ -28,7 +28,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
     });
   }
 
-  // 🎨 Helper: choose color based on priority
+  // Helper: choose color based on priority
   Color _getPriorityColor(String priority) {
     switch (priority) {
       case "I need now":
@@ -51,7 +51,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
       appBar: AppBar(title: const Text('Your Grocery List')),
       body: Column(
         children: [
-          // 🔍 Search Bar
+          // Search Bar
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -68,7 +68,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
             ),
           ),
 
-          // 🧾 List of Items
+          //List of Items
           Expanded(
             child: filteredItems.isEmpty
                 ? const Center(child: Text('No items found.'))
@@ -101,7 +101,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ),
                           ),
 
-                          // ✅ Approval switch + purchased icon
+                          //Approval switch + purchased icon
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -124,7 +124,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ],
                           ),
 
-                          // ✏️ Tap to edit item
+                          // Tap to edit item
                           onTap: () async {
                             final updated = await Navigator.push(
                               context,
