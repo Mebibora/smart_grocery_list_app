@@ -3,27 +3,30 @@ import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import '../models/grocery_item.dart';
 
-class ScreenThree extends StatefulWidget {
-  const ScreenThree({super.key});
+class WeeklyListGeneratorScreen extends StatefulWidget {
+  const WeeklyListGeneratorScreen({super.key});
 
   @override
-  State<ScreenThree> createState() => _ScreenThreeState();
+  State<WeeklyListGeneratorScreen> createState() =>
+      _WeeklyListGeneratorScreenState();
 }
 
-class _ScreenThreeState extends State<ScreenThree> {
+class _WeeklyListGeneratorScreenState
+    extends State<WeeklyListGeneratorScreen> {
   List<GroceryItem> weeklyList = [];
 
+  // 🧩 Generate a random weekly list of items
   Future<void> _generateWeeklyList() async {
     final dbItems = await DBHelper.instance.getItems();
     final random = Random();
 
-    // 🧠 Shuffle and take a few items (e.g., 5)
+    // Shuffle and take 5 random items
     final selected = (dbItems.toList()..shuffle()).take(5).toList();
 
-    // 🛒 Assign random quantity & priority
+    // Assign random quantities and priorities
     final priorities = ["I don't need", "I kinda need", "I need now"];
     for (var item in selected) {
-      item.quantity = random.nextInt(5) + 1; // random 1–5
+      item.quantity = random.nextInt(5) + 1; // Quantity 1–5
       item.priority = priorities[random.nextInt(priorities.length)];
     }
 
@@ -39,11 +42,16 @@ class _ScreenThreeState extends State<ScreenThree> {
       body: Column(
         children: [
           const SizedBox(height: 20),
+
+          // Button to generate list
           ElevatedButton(
             onPressed: _generateWeeklyList,
             child: const Text('Generate Weekly List'),
           ),
+
           const SizedBox(height: 20),
+
+          // Display generated list
           Expanded(
             child: weeklyList.isEmpty
                 ? const Center(child: Text('No weekly list yet.'))
@@ -56,7 +64,9 @@ class _ScreenThreeState extends State<ScreenThree> {
                         child: ListTile(
                           title: Text(
                             item.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           subtitle: Text(
                             'Qty: ${item.quantity} | Priority: ${item.priority}',
@@ -67,6 +77,12 @@ class _ScreenThreeState extends State<ScreenThree> {
                   ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context); // Go back to home screen
+        },
+        child: const Icon(Icons.home),
       ),
     );
   }

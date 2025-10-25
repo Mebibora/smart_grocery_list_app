@@ -3,14 +3,14 @@ import '../database/db_helper.dart';
 import '../models/grocery_item.dart';
 import 'edit_item_screen.dart';
 
-class ScreenTwo extends StatefulWidget {
-  const ScreenTwo({super.key});
+class UserListScreen extends StatefulWidget {
+  const UserListScreen({super.key});
 
   @override
-  State<ScreenTwo> createState() => _ScreenTwoState();
+  State<UserListScreen> createState() => _UserListScreenState();
 }
 
-class _ScreenTwoState extends State<ScreenTwo> {
+class _UserListScreenState extends State<UserListScreen> {
   List<GroceryItem> groceryItems = [];
   String _searchQuery = '';
 
@@ -20,7 +20,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
     _loadItems();
   }
 
-  //  Fetch items from DB
+  // ✅ Fetch items from DB
   Future<void> _loadItems() async {
     final items = await DBHelper.instance.getItems();
     setState(() {
@@ -28,7 +28,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
     });
   }
 
-  // Helper: choose color based on priority
+  // 🎨 Helper: choose color based on priority
   Color _getPriorityColor(String priority) {
     switch (priority) {
       case "I need now":
@@ -42,7 +42,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter items according to search
+    // 🔍 Filter items according to search
     final filteredItems = groceryItems
         .where((item) => item.name.toLowerCase().contains(_searchQuery))
         .toList();
@@ -51,7 +51,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
       appBar: AppBar(title: const Text('Your Grocery List')),
       body: Column(
         children: [
-          // Search Bar
+          // 🔎 Search Bar
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -68,7 +68,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
             ),
           ),
 
-          //List of Items
+          // 🧾 Filtered List of Items
           Expanded(
             child: filteredItems.isEmpty
                 ? const Center(child: Text('No items found.'))
@@ -91,8 +91,9 @@ class _ScreenTwoState extends State<ScreenTwo> {
                           ),
                           title: Text(
                             item.name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           subtitle: Text(
                             '${item.category} • ${item.priority} • \$${item.price.toStringAsFixed(2)}',
@@ -101,7 +102,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ),
                           ),
 
-                          //Approval switch + purchased icon
+                          // ✅ Approval Switch + Purchased Icon
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -124,7 +125,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ],
                           ),
 
-                          // Tap to edit item
+                          // ✏️ Tap to Edit Item
                           onTap: () async {
                             final updated = await Navigator.push(
                               context,
@@ -142,7 +143,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
         ],
       ),
 
-      // back to the home screen 
+      // ⬅️ Back to Home Screen
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pop(context);

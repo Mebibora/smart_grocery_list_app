@@ -1,52 +1,50 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // This is Screen One
-import 'user_list_screen.dart'; // This is Screen Two
-import 'weekly_list_generator_screen.dart'; // This is Screen Three
+import 'home_screen.dart';
+import 'user_list_screen.dart';
+import 'weekly_list_generator_screen.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(const SmartGroceryApp());
 }
 
-class MyApp extends StatefulWidget {
+class SmartGroceryApp extends StatefulWidget {
+  const SmartGroceryApp({super.key});
+
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SmartGroceryApp> createState() => _SmartGroceryAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  ThemeMode _themeMode = ThemeMode.light;
+class _SmartGroceryAppState extends State<SmartGroceryApp> {
+  bool isDarkTheme = false;
 
-  // These are the setting for the light theme and the dark theme
-  final ThemeData lightTheme = ThemeData(
-    primarySwatch: Colors.lightGreen,
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: const Color.fromARGB(255, 78, 168, 186),
-  );
-
-  final ThemeData darkTheme = ThemeData(
-    primarySwatch: Colors.green,
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color.fromARGB(255, 40, 48, 104),
-  );
-
-  void _toggleTheme() {
+  void toggleTheme() {
     setState(() {
-      _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+      isDarkTheme = !isDarkTheme;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: _themeMode,
-
-      // This is the configuration for navigation between different screens
-      initialRoute: '/',
+      debugShowCheckedModeBanner: false,
+      title: 'Smart Grocery App',
+      theme: isDarkTheme
+          ? ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.dark,
+              ),
+            )
+          : ThemeData.light().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.light,
+              ),
+            ),
+      home: HomeScreen(onToggleTheme: toggleTheme),
       routes: {
-        '/': (context) => ScreenOne(onToggleTheme: _toggleTheme), // Navigation to the Home Screen
-        '/second': (context) => const ScreenTwo(), // Navigation to the User List Screen
-        '/third': (context) => const ScreenThree() // Naviagtion to the Weekly list Generator Screen
+        '/second': (context) => UserListScreen(),
+        '/third': (context) => WeeklyListGeneratorScreen(),
       },
     );
   }
