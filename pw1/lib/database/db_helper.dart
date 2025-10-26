@@ -1,6 +1,24 @@
+import 'dart:math'; // 👈 Added for random price generation
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/grocery_item.dart';
+
+// Generates a random price between $1.00 and $20.99
+double generateRandomPrice() {
+  final random = Random();
+
+  // Random whole number between 1–20
+  int base = random.nextInt(20) + 1;
+
+  // Randomly decide whether to add .99 or not
+  bool addCents = random.nextBool();
+
+  // Calculate final price
+  double price = addCents ? base + 0.99 : base.toDouble();
+
+  // Return value rounded to 2 decimal places
+  return double.parse(price.toStringAsFixed(2));
+}
 
 class DBHelper {
   DBHelper._privateConstructor();
@@ -15,13 +33,14 @@ class DBHelper {
   }
 
   Future<Database> _initializeDatabase() async {
-    String path = join(await getDatabasesPath(), 'grocery_app.db');
+    // You can change the db name if you want to reset pre-populated data
+    String path = join(await getDatabasesPath(), 'grocery_app_v2.db');
     return await openDatabase(
       path,
       version: 1,
       onCreate: (db, version) async {
         await _createTable(db);
-        await _insertSampleData(db); // prepopulate data
+        await _insertSampleData(db); // Prepopulate data
       },
     );
   }
@@ -43,14 +62,14 @@ class DBHelper {
     ''');
   }
 
-  // 🥬 Prepopulate 10 sample grocery items
+  // Prepopulate 10 sample grocery items
   Future<void> _insertSampleData(Database db) async {
     final sampleItems = [
       GroceryItem(
         name: 'Apples',
         category: 'Produce',
         quantity: 4,
-        price: 3.99,
+        price: generateRandomPrice(),
         description: 'Fresh red apples',
         image: 'assets/images/apple.png',
         purchased: false,
@@ -61,7 +80,7 @@ class DBHelper {
         name: 'Bananas',
         category: 'Produce',
         quantity: 6,
-        price: 2.49,
+        price: generateRandomPrice(),
         description: 'Ripe yellow bananas',
         image: 'assets/images/bananas.png',
         purchased: false,
@@ -72,7 +91,7 @@ class DBHelper {
         name: 'Milk',
         category: 'Dairy',
         quantity: 1,
-        price: 2.89,
+        price: generateRandomPrice(),
         description: '1 Gallon of whole milk',
         image: 'assets/images/milk.png',
         purchased: false,
@@ -83,7 +102,7 @@ class DBHelper {
         name: 'Bread',
         category: 'Bakery',
         quantity: 1,
-        price: 2.19,
+        price: generateRandomPrice(),
         description: 'Whole grain sandwich bread',
         image: 'assets/images/bread.png',
         purchased: false,
@@ -94,7 +113,7 @@ class DBHelper {
         name: 'Eggs',
         category: 'Dairy',
         quantity: 12,
-        price: 4.29,
+        price: generateRandomPrice(),
         description: 'Free-range brown eggs (dozen)',
         image: 'assets/images/eggs.png',
         purchased: false,
@@ -105,7 +124,7 @@ class DBHelper {
         name: 'Orange Juice',
         category: 'Beverages',
         quantity: 1,
-        price: 3.59,
+        price: generateRandomPrice(),
         description: '1L of fresh orange juice',
         image: 'assets/images/orange_juice.png',
         purchased: false,
@@ -116,7 +135,7 @@ class DBHelper {
         name: 'Chips',
         category: 'Snacks',
         quantity: 2,
-        price: 1.99,
+        price: generateRandomPrice(),
         description: 'Crunchy potato chips',
         image: 'assets/images/chips.png',
         purchased: false,
@@ -127,7 +146,7 @@ class DBHelper {
         name: 'Toilet Paper',
         category: 'Household',
         quantity: 6,
-        price: 6.99,
+        price: generateRandomPrice(),
         description: '6-pack of soft toilet paper',
         image: 'assets/images/toilet_paper.png',
         purchased: false,
@@ -138,7 +157,7 @@ class DBHelper {
         name: 'Chicken Breast',
         category: 'Meat',
         quantity: 2,
-        price: 8.49,
+        price: generateRandomPrice(),
         description: 'Fresh skinless chicken breast',
         image: 'assets/images/chicken.png',
         purchased: false,
@@ -149,7 +168,7 @@ class DBHelper {
         name: 'Yogurt',
         category: 'Dairy',
         quantity: 4,
-        price: 5.49,
+        price: generateRandomPrice(),
         description: 'Greek yogurt assorted flavors',
         image: 'assets/images/yogurt.png',
         purchased: false,
@@ -163,8 +182,7 @@ class DBHelper {
     }
   }
 
-  // ✅ CRUD methods
-
+  // CRUD methods
   Future<int> insertItem(GroceryItem item) async {
     final db = await database;
     return await db.insert('groceries', item.toMap());

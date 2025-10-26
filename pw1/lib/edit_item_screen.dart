@@ -1,8 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/grocery_item.dart';
 import '../database/db_helper.dart';
-
-
 
 class EditItemScreen extends StatefulWidget {
   final GroceryItem item;
@@ -46,46 +45,57 @@ class _EditItemScreenState extends State<EditItemScreen> {
     super.dispose();
   }
 
-  //table to return a price estimation depending on the category of an item
-  void estimatePrice(category){ 
+  // Random price estimation with .99 chance
+  void estimatePrice(String category) async {
+    final random = Random();
+
+    // 1–20 random whole number
+    int base = random.nextInt(20) + 1;
+
+    // Randomly decide if it ends in .99
+    bool addCents = random.nextBool();
+
+    // Calculate random price
+    double randomPrice = addCents ? base + 0.99 : base.toDouble();
+
+    // Optional: tweak based on category
+    switch (category.toLowerCase()) {
+      case 'fruits':
+      case 'produce':
+      case 'vegetable':
+        randomPrice *= 0.5; // cheaper
+        break;
+      case 'meat':
+      case 'poultry':
+        randomPrice *= 1.5; // more expensive
+        break;
+      case 'cleaning_supplies':
+        randomPrice *= 1.2;
+        break;
+      default:
+        break;
+    }
+
+    // Never below $1
+    if (randomPrice < 1.0) randomPrice = 1.0;
+
+    // Round nicely
+    randomPrice = double.parse(randomPrice.toStringAsFixed(2));
+
+    // Update field
     setState(() {
-      switch(category){
-        case "Fruits":
-          priceController.text = "0.50";  
-          break;
-        case "Dairy":
-          priceController.text = "1.00"; 
-          break;
-        case "Bakery":
-          priceController.text = "3.99"; 
-          break;
-        case "Poultry":
-          priceController.text = "3.99"; 
-          break;
-        case "Meat":
-          priceController.text = "12.49"; 
-          break;
-        case "Grain":
-          priceController.text = "3.99"; 
-          break;
-        case "Beverages":
-          priceController.text = "2.99"; 
-          break;
-        case "Vegetable":
-          priceController.text = "0.79"; 
-          break;
-        case "Pantry":
-          priceController.text = "2.00"; 
-          break;
-        case "Cleaning_Supplies":
-          priceController.text = "15.59"; 
-          break;
-        default:
-          priceController.text = "0";
-      }
-    });  
+      priceController.text = randomPrice.toStringAsFixed(2);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Estimated price: \$${randomPrice.toStringAsFixed(2)}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
+  // Save updated item to database
   Future<void> _saveChanges() async {
     final updatedItem = GroceryItem(
       id: widget.item.id,
@@ -100,7 +110,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
 
     await DBHelper.instance.updateItem(updatedItem);
-    Navigator.pop(context, true); // Return true so we know to refresh the list
+    Navigator.pop(context, true); // Return true so parent screen refreshes
   }
 
   @override
@@ -129,8 +139,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                estimatePrice(categoryController.text);},
-              child: Text("Estimate Price")
+                estimatePrice(categoryController.text);
+              },
+              child: const Text("Estimate Price"),
             ),
             const SizedBox(height: 10),
             TextField(

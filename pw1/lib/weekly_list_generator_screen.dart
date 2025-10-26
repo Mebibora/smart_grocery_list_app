@@ -16,7 +16,7 @@ class _WeeklyListGeneratorScreenState
     extends State<WeeklyListGeneratorScreen> {
   List<GroceryItem> weeklyList = [];
 
-  // 🧩 Generate a random weekly list of items
+  // Generate a random weekly list of items
   Future<void> _generateWeeklyList() async {
     final dbItems = await DBHelper.instance.getItems();
     final random = Random();

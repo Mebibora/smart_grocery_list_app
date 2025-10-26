@@ -23,7 +23,7 @@ class GroceryItem {
     this.priority = "I don’t need",
   });
 
-  // ✅ Convert object to map
+  // Convert object to map
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
@@ -37,7 +37,7 @@ class GroceryItem {
         'priority': priority,
       };
 
-  // ✅ Convert map to object
+  // Convert map to object
   factory GroceryItem.fromMap(Map<String, dynamic> map) => GroceryItem(
         id: map['id'],
         name: map['name'],
