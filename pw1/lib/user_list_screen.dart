@@ -4,21 +4,17 @@ import '../models/grocery_item.dart';
 import 'edit_item_screen.dart';
 import 'globals.dart';
 
-class UserListScreen extends StatefulWidget {
-  
+class UserListScreen extends StatefulWidget {  
   const UserListScreen({super.key});
-  
-  
+    
   @override
   State<UserListScreen> createState() => _UserListScreenState();
 }
 
-
-
-
 class _UserListScreenState extends State<UserListScreen> with ChangeNotifier{
-  List<GroceryItem> groceryItems = [];
+  // List<GroceryItem> groceryItems = [];  I don't think this is needed since the variable is now global
   String _searchQuery = '';
+  double _scale = 1.0; // Variable for animation
 
   @override
   void initState() {
@@ -35,20 +31,29 @@ class _UserListScreenState extends State<UserListScreen> with ChangeNotifier{
   }
 
   // 🎨 Helper: choose color based on priority
-  Color _getPriorityColor(String priority) {
-    switch (priority) {
-      case "I need now":
-        return Colors.redAccent;
-      case "I kinda need":
-        return Colors.orangeAccent;
-      default:
-        return Colors.grey;
+  Color _getPriorityColor(String priority, bool purchased) {
+    if (purchased) {
+      return Colors.green;
+    }
+    else{
+      switch (priority) {
+        case "I need now":
+          return Colors.redAccent;
+        case "I kinda need":
+          return Colors.orangeAccent;
+        default:
+          return Colors.grey;
+      }
     }
   }
 
-  void updateList(){
-    groceryItems = List.from(weeklyList);
+  // Animation for swelling of card
+  void _swell() async {
+    setState(() => _scale = 1.1);
+    await Future.delayed(const Duration(milliseconds: 150));
+    setState(() => _scale = 1.0);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +67,7 @@ class _UserListScreenState extends State<UserListScreen> with ChangeNotifier{
       body: Column(
         children: [
           // 🔍 Search Bar
+          
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -86,65 +92,71 @@ class _UserListScreenState extends State<UserListScreen> with ChangeNotifier{
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
-                      return Card(
-                        color: item.approved
-                            ? _getPriorityColor(item.priority).withOpacity(0.15)
-                            : null,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
-                        child: ListTile(
-                          leading: Image.asset(
-                            item.image,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          title: Text(
-                            item.name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            '${item.category} • ${item.priority} • \$${item.price.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              color: _getPriorityColor(item.priority),
+                      return AnimatedScale( 
+                        scale: _scale,
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.easeOut,
+                        child: Card(
+                          color: item.approved
+                              ? _getPriorityColor(item.priority, item.purchased).withOpacity(0.15)
+                              : null,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          child: ListTile(
+                            leading: Image.asset(
+                              item.image,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            title: Text(
+                              item.name,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              '${item.category} • ${item.priority} • \$${item.price.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: _getPriorityColor(item.priority, item.purchased),
+                              ),
+                            ),
 
-                          // ✅ Approval switch + purchased icon
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Switch(
-                                value: item.approved,
-                                onChanged: (value) async {
-                                  item.approved = value;
-                                  await DBHelper.instance.updateItem(item);
-                                  setState(() {});
-                                },
-                              ),
-                              Icon(
-                                item.purchased
-                                    ? Icons.check_circle
-                                    : Icons.circle_outlined,
-                                color: item.purchased
-                                    ? Colors.green
-                                    : Colors.grey,
-                              ),
-                            ],
-                          ),
+                            // ✅ Approval switch + purchased icon
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Switch(
+                                  value: item.approved,
+                                  onChanged: (value) async {
+                                    item.approved = value;
+                                    await DBHelper.instance.updateItem(item); 
+                                    _swell();                                   
+                                    setState(() {});                                    
+                                  },
+                                ),
+                                Icon(
+                                  item.purchased
+                                      ? Icons.check_circle
+                                      : Icons.circle_outlined,
+                                  color: item.purchased
+                                      ? Colors.green
+                                      : Colors.grey,
+                                ),
+                              ],
+                            ),
 
-                          // ✏️ Tap to edit item
-                          onTap: () async {
-                            final updated = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => EditItemScreen(item: item),
-                              ),
-                            );
-                            if (updated == true) _loadItems();
-                          },
-                        ),
+                            // ✏️ Tap to edit item
+                            onTap: () async {
+                              final updated = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EditItemScreen(item: item),
+                                ),
+                              );
+                              if (updated == true) _loadItems();
+                            },
+                          ),
+                        )
                       );
                     },
                   ),
