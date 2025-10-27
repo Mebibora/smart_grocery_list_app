@@ -1,3 +1,4 @@
+Youtube Presentation: https://youtu.be/jnUiYPSsM9Q
 	AI LOG USAGE
 
 Question 1 — October 18th
